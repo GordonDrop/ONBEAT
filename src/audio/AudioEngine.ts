@@ -74,8 +74,17 @@ export class AudioEngine {
       this.schedulerTimerId = null;
     }
 
+    this.audioContext?.suspend();
+
     this.currentBeat = 0;
     this.currentBar = 1;
+    this.nextNoteTime = 0;
+  }
+
+  dispose(): void {
+    this.stop();
+    this.audioContext?.close();
+    this.audioContext = null;
   }
 
   setBpm(bpm: number): void {
@@ -143,12 +152,7 @@ export class AudioEngine {
     let swingOffset = 0;
 
     if (this.swing.enabled) {
-      swingOffset = calculateSwingOffset(
-        this.currentBeat,
-        this.timeSignature,
-        this.swing,
-        secondsPerBeat
-      );
+      swingOffset = calculateSwingOffset(this.currentBeat, this.swing, secondsPerBeat);
     }
 
     this.nextNoteTime += secondsPerBeat + swingOffset;
