@@ -6,7 +6,7 @@ import type {
   TimeSignature,
 } from "../types";
 import { type ClickType, playClick } from "./sounds";
-import { calculateSwingOffset } from "./swingCalculator";
+import { SUBDIVISION_COUNTS, calculateSubdivisionTime } from "./subdivisionCalculator";
 
 export interface AudioEngineConfig {
   onBeat: (position: PlaybackPosition, accent: BeatAccent) => void;
@@ -20,13 +20,15 @@ export class AudioEngine {
 
   private bpm = 120;
   private timeSignature: TimeSignature = { beats: 4, noteValue: 4 };
-  private swing: SwingSettings = { enabled: false, type: "sixteenth" };
+  private swing: SwingSettings = { enabled: false, mode: "tripletShuffle" };
   private beatAccents: BeatAccents = ["accent", "normal", "normal", "normal"];
   private isMuted = false;
 
   private currentBeat = 0;
   private currentBar = 1;
+  private currentSubdivision = 0;
   private nextNoteTime = 0;
+  private beatStartTime = 0;
 
   private readonly LOOKAHEAD_MS = 25;
   private readonly SCHEDULE_AHEAD_SEC = 0.1;
@@ -46,7 +48,10 @@ export class AudioEngine {
 
     this.currentBeat = 0;
     this.currentBar = 1;
-    this.nextNoteTime = this.audioContext.currentTime + 0.05;
+    this.currentSubdivision = 0;
+    const startTime = this.audioContext.currentTime + 0.05;
+    this.beatStartTime = startTime;
+    this.nextNoteTime = startTime;
 
     this.schedulerTimerId = window.setInterval(() => this.scheduler(), this.LOOKAHEAD_MS);
   }
@@ -78,7 +83,9 @@ export class AudioEngine {
 
     this.currentBeat = 0;
     this.currentBar = 1;
+    this.currentSubdivision = 0;
     this.nextNoteTime = 0;
+    this.beatStartTime = 0;
   }
 
   dispose(): void {
@@ -131,38 +138,58 @@ export class AudioEngine {
   }
 
   private scheduleNote(time: number): void {
-    const accent = this.beatAccents[this.currentBeat] ?? "normal";
+    const beatAccent = this.beatAccents[this.currentBeat] ?? "normal";
 
-    if (!this.isMuted && accent !== "mute") {
-      this.playClick(time, accent as ClickType);
+    if (!this.isMuted && beatAccent !== "mute") {
+      const clickType = this.getClickType(beatAccent);
+      this.playClick(time, clickType);
     }
 
-    this.scheduleUICallback(
-      time,
-      {
-        bar: this.currentBar,
-        beat: this.currentBeat + 1,
-      },
-      accent
-    );
+    if (this.currentSubdivision === 0) {
+      this.scheduleUICallback(
+        time,
+        {
+          bar: this.currentBar,
+          beat: this.currentBeat + 1,
+        },
+        beatAccent
+      );
+    }
+  }
+
+  private getClickType(beatAccent: BeatAccent): ClickType {
+    if (this.currentSubdivision !== 0) {
+      return "subdivision";
+    }
+    return beatAccent === "accent" ? "accent" : "normal";
   }
 
   private advanceNote(): void {
     const secondsPerBeat = 60.0 / this.bpm;
-    let swingOffset = 0;
+    const mode = this.swing.enabled ? this.swing.mode : "straight";
+    const subdivCount = this.swing.enabled ? SUBDIVISION_COUNTS[mode] : 1;
 
-    if (this.swing.enabled) {
-      swingOffset = calculateSwingOffset(this.currentBeat, this.swing, secondsPerBeat);
+    this.currentSubdivision++;
+
+    if (this.currentSubdivision >= subdivCount) {
+      this.currentSubdivision = 0;
+      this.currentBeat++;
+
+      if (this.currentBeat >= this.timeSignature.beats) {
+        this.currentBeat = 0;
+        this.config.onBarComplete(this.currentBar);
+        this.currentBar++;
+      }
+
+      this.beatStartTime += secondsPerBeat;
     }
 
-    this.nextNoteTime += secondsPerBeat + swingOffset;
-    this.currentBeat++;
-
-    if (this.currentBeat >= this.timeSignature.beats) {
-      this.currentBeat = 0;
-      this.config.onBarComplete(this.currentBar);
-      this.currentBar++;
-    }
+    this.nextNoteTime = calculateSubdivisionTime(
+      this.beatStartTime,
+      this.currentSubdivision,
+      mode,
+      secondsPerBeat
+    );
   }
 
   private scheduleUICallback(

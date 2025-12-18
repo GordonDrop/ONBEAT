@@ -1,5 +1,5 @@
 import { useMetronome } from "../../hooks/useMetronome";
-import type { SwingType } from "../../types";
+import type { SubdivisionMode } from "../../types";
 import styles from "./SwingToggle.module.css";
 
 interface SwingToggleProps {
@@ -7,10 +7,10 @@ interface SwingToggleProps {
 }
 
 export function SwingToggle({ className }: SwingToggleProps) {
-  const { isSwingEnabled, swingType, toggleSwing, setSwingType } = useMetronome();
+  const { isSwingEnabled, swingMode, toggleSwing, setSwingMode } = useMetronome();
 
-  const handleTypeChange = (type: SwingType): void => {
-    setSwingType(type);
+  const handleModeChange = (mode: SubdivisionMode): void => {
+    setSwingMode(mode);
   };
 
   return (
@@ -33,20 +33,20 @@ export function SwingToggle({ className }: SwingToggleProps) {
           <label className={styles.option}>
             <input
               type="radio"
-              name="swingType"
-              checked={swingType === "sixteenth"}
-              onChange={() => handleTypeChange("sixteenth")}
+              name="swingMode"
+              checked={swingMode === "tripletShuffle"}
+              onChange={() => handleModeChange("tripletShuffle")}
             />
-            <span className={styles.optionLabel}>Sixteenth</span>
+            <span className={styles.optionLabel}>Triplet Shuffle</span>
           </label>
           <label className={styles.option}>
             <input
               type="radio"
-              name="swingType"
-              checked={swingType === "triplet"}
-              onChange={() => handleTypeChange("triplet")}
+              name="swingMode"
+              checked={swingMode === "sixteenthSwing"}
+              onChange={() => handleModeChange("sixteenthSwing")}
             />
-            <span className={styles.optionLabel}>Triplet Shuffle</span>
+            <span className={styles.optionLabel}>Sixteenth Swing</span>
           </label>
         </div>
       )}

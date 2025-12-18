@@ -7,8 +7,8 @@ import type {
   MetronomeSettings,
   PlaybackPosition,
   PlaybackState,
+  SubdivisionMode,
   SwingSettings,
-  SwingType,
   TempoRampSettings,
   TimeSignature,
   TrainingSettings,
@@ -27,7 +27,7 @@ interface MetronomeActions {
   setTimeSignature: (ts: TimeSignature) => void;
   setSwing: (swing: SwingSettings) => void;
   toggleSwing: () => void;
-  setSwingType: (type: SwingType) => void;
+  setSwingMode: (mode: SubdivisionMode) => void;
   setBeatAccent: (beat: number, accent: BeatAccent) => void;
   toggleBeatAccent: (beat: number) => void;
 
@@ -98,11 +98,11 @@ export const useMetronomeStore = create<MetronomeStore>()(
       }));
     },
 
-    setSwingType: (type) => {
+    setSwingMode: (mode) => {
       set((state) => ({
         settings: {
           ...state.settings,
-          swing: { ...state.settings.swing, type },
+          swing: { ...state.settings.swing, mode },
         },
       }));
     },

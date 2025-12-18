@@ -3,11 +3,13 @@ export interface TimeSignature {
   noteValue: number;
 }
 
-export type SwingType = "sixteenth" | "triplet";
+export type SubdivisionMode = "straight" | "tripletShuffle" | "sixteenthSwing";
+
+export type SubdivisionAccent = "downbeat" | "subdivision";
 
 export interface SwingSettings {
   enabled: boolean;
-  type: SwingType;
+  mode: SubdivisionMode;
 }
 
 export type BeatAccent = "mute" | "normal" | "accent";

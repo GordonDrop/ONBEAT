@@ -13,7 +13,7 @@ import {
   selectTimeSignature,
   useMetronomeStore,
 } from "../state/metronomeStore";
-import type { BeatAccent, PlaybackPosition, SwingType } from "../types";
+import type { BeatAccent, PlaybackPosition, SubdivisionMode } from "../types";
 
 interface UseMetronomeReturn {
   bpm: number;
@@ -24,9 +24,9 @@ interface UseMetronomeReturn {
   setTimeSignature: (beats: number, noteValue: number) => void;
 
   isSwingEnabled: boolean;
-  swingType: SwingType;
+  swingMode: SubdivisionMode;
   toggleSwing: () => void;
-  setSwingType: (type: SwingType) => void;
+  setSwingMode: (mode: SubdivisionMode) => void;
 
   beatAccents: BeatAccent[];
   toggleBeatAccent: (beat: number) => void;
@@ -61,7 +61,7 @@ export function useMetronome(): UseMetronomeReturn {
     incrementBpm,
     setTimeSignature: setTimeSignatureAction,
     toggleSwing,
-    setSwingType,
+    setSwingMode,
     toggleBeatAccent,
     start,
     pause,
@@ -74,7 +74,7 @@ export function useMetronome(): UseMetronomeReturn {
       incrementBpm: state.incrementBpm,
       setTimeSignature: state.setTimeSignature,
       toggleSwing: state.toggleSwing,
-      setSwingType: state.setSwingType,
+      setSwingMode: state.setSwingMode,
       toggleBeatAccent: state.toggleBeatAccent,
       start: state.start,
       pause: state.pause,
@@ -160,9 +160,9 @@ export function useMetronome(): UseMetronomeReturn {
     timeSignature,
     setTimeSignature,
     isSwingEnabled: swing.enabled,
-    swingType: swing.type,
+    swingMode: swing.mode,
     toggleSwing,
-    setSwingType,
+    setSwingMode,
     beatAccents,
     toggleBeatAccent,
     isPlaying,

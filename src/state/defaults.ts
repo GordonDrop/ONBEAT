@@ -3,7 +3,7 @@ import type { MetronomeSettings, PlaybackState, TrainingSettings } from "../type
 export const DEFAULT_SETTINGS: MetronomeSettings = {
   bpm: 120,
   timeSignature: { beats: 4, noteValue: 4 },
-  swing: { enabled: false, type: "sixteenth" },
+  swing: { enabled: false, mode: "tripletShuffle" },
   beatAccents: ["accent", "normal", "normal", "normal"],
 };
 
