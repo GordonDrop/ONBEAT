@@ -67,21 +67,8 @@ export const useMetronomeStore = create<MetronomeStore>()(
     setTimeSignature: (ts) => {
       set((state) => {
         const newBeats = ts.beats;
-        const currentAccents = state.settings.beatAccents;
-        let newAccents: BeatAccent[];
-
-        if (newBeats > currentAccents.length) {
-          newAccents = [
-            ...currentAccents,
-            ...Array<BeatAccent>(newBeats - currentAccents.length).fill("normal"),
-          ];
-        } else {
-          newAccents = currentAccents.slice(0, newBeats);
-        }
-
-        if (newAccents[0] !== "accent") {
-          newAccents[0] = "accent";
-        }
+        const newAccents: BeatAccent[] = Array<BeatAccent>(newBeats).fill("normal");
+        newAccents[0] = "accent";
 
         return {
           settings: {

@@ -1,16 +1,12 @@
-export type ClickType = 'accent' | 'normal';
+export type ClickType = "accent" | "normal";
 
-export function playClick(
-  audioContext: AudioContext,
-  time: number,
-  type: ClickType
-): void {
-  const isAccent = type === 'accent';
+export function playClick(audioContext: AudioContext, time: number, type: ClickType): void {
+  const isAccent = type === "accent";
 
   const oscillator = audioContext.createOscillator();
   const gainNode = audioContext.createGain();
 
-  oscillator.type = 'sine';
+  oscillator.type = "sine";
   oscillator.frequency.value = isAccent ? 880 : 440;
 
   const volume = isAccent ? 1.0 : 0.7;
@@ -25,4 +21,3 @@ export function playClick(
   oscillator.start(time);
   oscillator.stop(time + duration);
 }
-

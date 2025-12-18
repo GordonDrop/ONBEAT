@@ -2,8 +2,8 @@ import { describe, expect, it } from "vitest";
 import type { SwingSettings } from "../types";
 import {
   calculateSwingOffset,
-  TRIPLET_SWING_RATIO,
   SIXTEENTH_SWING_RATIO,
+  TRIPLET_SWING_RATIO,
 } from "./swingCalculator";
 
 describe("calculateSwingOffset", () => {

@@ -5,8 +5,8 @@ import type {
   SwingSettings,
   TimeSignature,
 } from "../types";
-import { calculateSwingOffset } from "./swingCalculator";
 import { type ClickType, playClick } from "./sounds";
+import { calculateSwingOffset } from "./swingCalculator";
 
 export interface AudioEngineConfig {
   onBeat: (position: PlaybackPosition, accent: BeatAccent) => void;

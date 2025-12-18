@@ -3,14 +3,14 @@ export interface TimeSignature {
   noteValue: number;
 }
 
-export type SwingType = 'sixteenth' | 'triplet';
+export type SwingType = "sixteenth" | "triplet";
 
 export interface SwingSettings {
   enabled: boolean;
   type: SwingType;
 }
 
-export type BeatAccent = 'mute' | 'normal' | 'accent';
+export type BeatAccent = "mute" | "normal" | "accent";
 export type BeatAccents = BeatAccent[];
 
 export interface MetronomeSettings {
@@ -56,7 +56,7 @@ export interface TrainingSettings {
   selectedExerciseId: string | null;
 }
 
-export type PlaybackStatus = 'stopped' | 'playing' | 'paused' | 'countIn';
+export type PlaybackStatus = "stopped" | "playing" | "paused" | "countIn";
 
 export interface PlaybackPosition {
   bar: number;
@@ -78,18 +78,17 @@ export interface AppState {
 }
 
 export type MetronomeAction =
-  | { type: 'SET_BPM'; payload: number }
-  | { type: 'SET_TIME_SIGNATURE'; payload: TimeSignature }
-  | { type: 'SET_SWING'; payload: SwingSettings }
-  | { type: 'SET_BEAT_ACCENT'; payload: { beat: number; accent: BeatAccent } }
-  | { type: 'TOGGLE_BEAT_ACCENT'; payload: number }
-  | { type: 'START' }
-  | { type: 'PAUSE' }
-  | { type: 'RESUME' }
-  | { type: 'STOP' }
-  | { type: 'TICK'; payload: PlaybackPosition }
-  | { type: 'SET_COUNT_IN'; payload: CountInSettings }
-  | { type: 'SET_CLICK_SKIP'; payload: ClickSkipSettings }
-  | { type: 'SET_TEMPO_RAMP'; payload: TempoRampSettings }
-  | { type: 'SELECT_EXERCISE'; payload: string | null };
-
+  | { type: "SET_BPM"; payload: number }
+  | { type: "SET_TIME_SIGNATURE"; payload: TimeSignature }
+  | { type: "SET_SWING"; payload: SwingSettings }
+  | { type: "SET_BEAT_ACCENT"; payload: { beat: number; accent: BeatAccent } }
+  | { type: "TOGGLE_BEAT_ACCENT"; payload: number }
+  | { type: "START" }
+  | { type: "PAUSE" }
+  | { type: "RESUME" }
+  | { type: "STOP" }
+  | { type: "TICK"; payload: PlaybackPosition }
+  | { type: "SET_COUNT_IN"; payload: CountInSettings }
+  | { type: "SET_CLICK_SKIP"; payload: ClickSkipSettings }
+  | { type: "SET_TEMPO_RAMP"; payload: TempoRampSettings }
+  | { type: "SELECT_EXERCISE"; payload: string | null };
